@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Products</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <h1>Product Details</h1>
+    {% if product_details %}
+    Item Name: {{product_details.product_name}} <br>
+    Item details: {{product_details.product_details}} <br>
+    Item Price: {{product_details.product_price}} <br>
+    Item Image: <img style="width: 350px; height: 250px" src="{{product_details.product_image.url}}" alt="No Image Found">
+    {% endif %}
+    {% if message %}
+    {{message}}
+    {% endif %}
+</body>
+</html>

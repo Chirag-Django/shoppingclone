@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+{% extends 'merchandise/base.html' %}
+{% block content %}
+
+    <div class="row">
+    <div class="col-12">
+            <h1>Product Details</h1>
+    {% if product_details %}
+    Item Name: {{product_details.product_name}} <br>
+    {{product_details.product_timestamp|timesince}} ago <br>
+    Item details: {{product_details.product_details|truncatewords:30}} <br>
+    Item Price: {{product_details.product_price}} <br>
+    Featured: {{product_details.featured_item}} <br>
+    Item Image: <img style="width: 350px; height: 250px" src="{{product_details.product_image.url}}" alt="No Image Found">
+    {% endif %}
+    {% if message %}
+    {{message}}
+    {% endif %}
+    <br> <br>
+
+    <div class="col-12">
+        {%  if not product_details in cart.products.all %}
+        <form action="{% url 'cart_app:add_product' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="productId" value="{{product_details.pk}}">
+            <button class="btn btn-primary">Add To Cart</button>
+        </form>
+        {% endif %}
+            {%  if product_details in cart.products.all %}
+            <strong>ABOVE ITEM IS IN CART</strong>
+            <form action="{% url 'cart_app:remove_product'%}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="productId" value="{{product_details.pk}}">
+            <button class="btn btn-danger">REMOVE?</button>
+            </form>
+            {% else %}
+
+            {% endif %}
+
+    </div>
+    </div>
+    </div>
+{% endblock %}

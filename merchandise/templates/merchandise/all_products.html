@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+{% extends 'merchandise/base.html' %}
+{% block content %}
+<!-- 
+    <form class="form-inline col-12 py-3 offset-4" action="{% url 'searchFilter:search_product' %}">
+    <input class="form-control" name="search" type="search" placeholder="Search" aria-label="Search">
+    <button class="btn btn-outline-success" type="submit">Search</button>
+    </form> -->
+    <div class="row">
+        <div class="col">
+            <p>Common Tags:
+            {% for mt in common_tags %}
+                <a href="#" class="badge badge-success">{{mt}}</a>
+            {% endfor %}
+            </p>
+        </div>
+    </div>
+
+{% if all_products %}
+
+<!--    <div class="alert alert-dark" role="alert">-->
+<!--                <h6> Results for {{search_product|title}}</h6>-->
+<!--    </div>-->
+
+
+<div class="row">
+        {% for product in all_products %}
+    <div class="col">
+        {% include 'merchandise/snippets/card.html' with instance=product %}
+        {% if forloop.counter|divisibleby:3%}
+    </div>
+</div>
+<div class="row">
+        {% else %}
+</div>
+        {% endif %}
+        {% endfor %}
+{% else %}
+<div class="col-lg-12">
+    <div class="alert alert-primary" role="alert">
+        No Products found
+    </div>
+</div>
+{% endif %}
+{{request.session.item_count}}
+
+{% endblock %}

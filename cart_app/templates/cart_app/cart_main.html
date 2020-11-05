@@ -1,0 +1,50 @@
+{% extends 'merchandise/base.html' %}
+{% block content %}
+<h1>Your CART</h1>
+
+{% if my_cart.products.exists %}
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Sr. No.</th>
+      <th scope="col">Product Name</th>
+      <th scope="col">Remove</th>
+      <th scope="col">Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for product in my_cart.products.all %}
+    <tr>
+      <td>{{forloop.counter}}</td>
+      <td>{{product.product_name}}</td>
+      <td>
+        <form action="{% url 'cart_app:remove_product'%}" method="POST">
+          {% csrf_token %}
+          <input type="hidden" name="productId" value="{{product.pk}}">
+          <button>&#x2718</button>
+        </form>
+      
+      </td>
+      <td>{{product.product_price}}</td>
+      
+    </tr>
+    {% endfor %}
+  </tbody>
+  <thead>
+    <tr>
+      <th colspan="3">Cart Subtotal</th>
+      <th scope="col">{{my_cart.subtotal}}</th>
+    </tr>
+  </thead>
+</table>
+{% else %}
+    <div class="jumbotron jumbotron-fluid">
+      <div class="container">
+        <h1 class="display-4">NO ITEMS IN CART</h1>
+        <button class="btn btn-warning"><a href="{% url 'merchandise:products' %}">Add Items</a></button>
+      </div>
+    </div>
+{% endif %}
+
+{% endblock%}
+
