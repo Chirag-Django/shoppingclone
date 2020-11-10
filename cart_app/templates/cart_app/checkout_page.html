@@ -1,0 +1,16 @@
+{% extends 'merchandise/base.html' %}
+{% block content %}
+<h1>Checkout</h1>
+
+{% if my_order %}
+    <h3>Order ID: {{my_order.order_id}}</h3>
+    <h3>Cart Total: {{my_order.cart.cart_total}}</h3>
+    <h3>Shipping Total: {{my_order.shipping_total}}</h3>
+    <h3>Order Total: {{my_order.total}}</h3>
+
+{% else %}
+
+{% endif %}
+
+{% endblock%}
+

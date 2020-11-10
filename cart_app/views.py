@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Cart
 from merchandise.models import Product
+from orders.models import Order
 # Create your views here.
 
 def get_or_create_cart(request):
@@ -46,3 +47,10 @@ def cart_remove(request):
     my_cart.products.remove(product)
     return redirect('cart_app:cart')
 
+def checkout_page(request):
+    new_cart, my_cart = get_or_create_cart(request)
+    if not new_cart:
+        my_order = Order.objects.filter(cart=my_cart).first()
+    elif my_cart.products.count()==0:
+        return redirect('cart_app:cart')
+    return render(request,'cart_app/checkout_page.html',{'my_order':my_order})

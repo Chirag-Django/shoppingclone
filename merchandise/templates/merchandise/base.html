@@ -34,6 +34,18 @@
         <li class="nav-item active">
           <a class="nav-link" href="{% url 'merchandise:products' %}">Products</a>
         </li>
+          {% if user.is_authenticated %}
+          <li class="nav-item active">
+          <a class="nav-link" href="{% url 'users_app:logout' %}">Logout</a>
+            </li>
+          {%else%}
+          <li class="nav-item active">
+          <a class="nav-link" href="{% url 'users_app:login' %}">Login</a>
+            </li>
+          <li class="nav-item active">
+          <a class="nav-link" href="{% url 'users_app:register' %}">Register</a>
+            </li>
+          {% endif %}
         <li class="nav-item dropdown active">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Dropdown

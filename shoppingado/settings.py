@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'searchFilter',
     'taggit',
     'cart_app',
+    'orders',
+    'users_app'
 ]
 
 MIDDLEWARE = [
@@ -133,3 +135,6 @@ STATICFILES_DIRS = [
 STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR),'static_cdn','static_root')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR),'static_cdn','media_root')
+
+LOGIN_REDIRECT_URL = "merchandise:home"
+LOGIN_URL = 'login'
