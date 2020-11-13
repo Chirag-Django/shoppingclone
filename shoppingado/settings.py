@@ -44,7 +44,9 @@ INSTALLED_APPS = [
     'taggit',
     'cart_app',
     'orders',
-    'users_app'
+    'users_app',
+    'billing',
+    'address'
 ]
 
 MIDDLEWARE = [

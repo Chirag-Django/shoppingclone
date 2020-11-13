@@ -2,6 +2,10 @@ from django.shortcuts import render, redirect
 from .models import Cart
 from merchandise.models import Product
 from orders.models import Order
+from billing.models import BillingDetail
+from users_app.models import GuestCustomer
+from address.forms import ShippingAddressForm
+from address.models import ShippingAddress
 # Create your views here.
 
 def get_or_create_cart(request):
@@ -49,8 +53,37 @@ def cart_remove(request):
 
 def checkout_page(request):
     new_cart, my_cart = get_or_create_cart(request)
+    user = request.user
+    billing_details = None
+    my_order = None
+    guest_email = request.session.get('guest_email')
+
     if not new_cart:
-        my_order = Order.objects.filter(cart=my_cart).first()
+        my_order,created = Order.objects.get_or_create(cart=my_cart)
     elif my_cart.products.count()==0:
         return redirect('cart_app:cart')
-    return render(request,'cart_app/checkout_page.html',{'my_order':my_order})
+    if user.is_authenticated:
+        if guest_email:
+            del request.session['guest_email']
+        billing_details, created = BillingDetail.objects.get_or_create(billing_user=user,billing_email=user.email)
+    elif guest_email:
+        guest_registered = GuestCustomer.objects.filter(email=guest_email).first()
+        billing_details, created = BillingDetail.objects.get_or_create(billing_email=guest_registered.email)
+    form = ShippingAddressForm()
+    if request.method == 'POST':
+        form = ShippingAddressForm(data=request.POST or None)
+        if form.is_valid():
+            form = form.save(commit=False)
+            form.billing_details = billing_details
+            request.session['shipping_addr_id'] = form.pk
+            form.save()
+
+    shipping_addr_id = request.session.get('shipping_addr_id')
+    shipping_object = ShippingAddress.objects.filter(id=shipping_addr_id).first()
+    if my_order:
+        my_order.billing_details = billing_details
+        my_order.shipping_address = shipping_object
+        my_order.save()
+    return render(request,'cart_app/checkout_page.html',{'my_order':my_order,
+                                                         'billing_details':billing_details,
+                                                         'shipping_address':form})
